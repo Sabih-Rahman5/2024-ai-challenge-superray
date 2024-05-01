@@ -1,0 +1,5 @@
+env/
+SuperRay/__pycache__/
+superrayapp/__pycache__/
+superrayapp/migrations
+./gitignore
