@@ -9,7 +9,6 @@ import numpy as np
 from .functions import inference, getImgClass, detect_fractures
 from django.core.files.base import ContentFile
 import base64
-
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -93,18 +92,15 @@ def SuperResolutionAPI(request):
             
             image = cv2.imdecode(np.fromstring(image_file.read(), np.uint8), cv2.IMREAD_COLOR)
 
-            #function checks if the image is of xray or just random image
+            # function checks if the image is of xray or just random image
             classify_image = getImgClass(image)
             if (classify_image == "negative"):
                 print('error: Medical Image is allowed only')
                 return Response({'error': 'Medical Image is allowed only'}, status=403)
             
-            # print(classify_image)
    
-            # upscale + llm
+            # upscale and inference with llm
             upscaled_image, report = inference(image, classify_image)
-            # upscaled_image = detect_fractures(upscaled_image)
-            
             print(report)
             
              # Convert image to byte data
@@ -121,12 +117,12 @@ def SuperResolutionAPI(request):
         except Exception as e:
             return Response({'error': str(e)}, status=500)
         
-        #detect fracture view
+       
         
         
         
         
-        
+    #detect fracture view     
 @api_view(['POST'])
 def FractureDetectionAPI(request):
     if request.method == 'POST':
